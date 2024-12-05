@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name     : myCoolWebApp
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name     : in-cluster
+    namespace: app1
+  source:
+    path   : "HelmCharts/WebApp"
+    repoURL: "git@github.com:Nurtek/argocd.git"
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+      - values.yaml
+
+  project: default
+  syncPolicy:
+    automated:
+      prune   : true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
